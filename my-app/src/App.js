@@ -1,19 +1,5 @@
 import "./App.css";
 
-const Nav = (props) => {
-  const list = [];
-  props.topics.map((v) => {
-    list.push(v.title);
-  });
-  return (
-    <nav>
-      <ol>
-        <li>{list}</li>
-      </ol>
-    </nav>
-  );
-};
-
 const Article = (props) => {
   return (
     <article>
@@ -29,14 +15,45 @@ const Header = (props) => {
       <h1>
         <a
           href=""
-          onClick={function (event) {
+          onClick={(event) => {
             event.preventDefault();
+            props.onChangeMode();
           }}
         >
           {props.title}
         </a>
       </h1>
     </header>
+  );
+};
+
+const Nav = (props) => {
+  const list = [];
+  for (let i = 0; i < props.topics.length; i++) {
+    let t = props.topics[i];
+    console.log(t);
+    list.push(
+      <li key={t.id}>
+        <a
+          id={t.id}
+          href={"/read/" + t.id}
+          onClick={(event) => {
+            // console.log("===============", event.target);
+            console.log("===============", event);
+            event.preventDefault();
+            props.onChangeMode(event.target.id);
+          }}
+        >
+          {t.title}
+        </a>
+      </li>
+    );
+  }
+
+  return (
+    <nav>
+      <ol>{list}</ol>
+    </nav>
   );
 };
 
@@ -50,11 +67,17 @@ function App() {
     <div>
       <Header
         title="React"
-        onChange={function () {
-          AudioListener("Header");
+        onChangeMode={() => {
+          // AudioListener("Header");
+          alert("Header");
         }}
       />
-      <Nav topics={topics} />
+      <Nav
+        topics={topics}
+        onChangeMode={(id) => {
+          alert(id);
+        }}
+      />
       <Article title="Welcom" body="Hello , WEB" />
     </div>
   );
